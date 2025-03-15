@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonTrackingSystem.Api", "LessonTrackingSystem.Api\LessonTrackingSystem.Api.csproj", "{B94B0DA9-8849-492C-9FA7-71A0ADB9E50A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LessonTrackingSystem.DataAccess", "LessonTrackingSystem.DataAccess\LessonTrackingSystem.DataAccess.csproj", "{3DF2FCB4-C3D4-41CF-B17D-AAF559B3F305}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B94B0DA9-8849-492C-9FA7-71A0ADB9E50A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B94B0DA9-8849-492C-9FA7-71A0ADB9E50A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B94B0DA9-8849-492C-9FA7-71A0ADB9E50A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B94B0DA9-8849-492C-9FA7-71A0ADB9E50A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DF2FCB4-C3D4-41CF-B17D-AAF559B3F305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF2FCB4-C3D4-41CF-B17D-AAF559B3F305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF2FCB4-C3D4-41CF-B17D-AAF559B3F305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF2FCB4-C3D4-41CF-B17D-AAF559B3F305}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51D98860-FCAB-4858-91AC-B4D4FD15F5AC}
+	EndGlobalSection
+EndGlobal

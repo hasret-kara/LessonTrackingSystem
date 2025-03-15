@@ -1,0 +1,78 @@
+# .NET ile geliştirilmiş projeler için .gitignore dosyası
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.ide
+
+# Visual Studio 2019+ cache/options directory
+.vscode/
+.vs/
+
+# Build sonuçları
+bin/
+obj/
+out/
+
+# VS Code workspace
+.vscode/
+
+# Rider
+.idea/
+*.iml
+
+# MacOS ve Linux dosyaları
+.DS_Store
+*.swp
+
+# Paket yönetimi
+**/node_modules/
+**/packages/
+
+# Logs ve geçici dosyalar
+*.log
+
+# Debug, Release, ve diğer yapı çıktı klasörleri
+Debug/
+Release/
+
+# NuGet paketleri
+*.nupkg
+
+# .NET user-secrets
+secrets.json
+
+# Docker
+.dockerignore
+
+# Entity Framework Migrations için oluşturulan dosyalar
+Migrations/
+
+# Son eklenenler
+*.cache
+*.pdb
+*.lock.json
+
+# Local config
+appsettings.*.json
+
+# Test sonuçları
+TestResults/
+
+# Coverage (Code Coverage için oluşturulan dosyalar)
+coverage/
+*.coverage
+
+# Rider/JetBrains çalışma dosyaları
+*.dotCover
+.idea/
+
+# Azure DevOps
+*.publishsettings
+
+# IIS ve Web Config dosyaları
+*.vspscc
+*.vssscc
