@@ -63,5 +63,17 @@ namespace LessonTrackingSystem.Api.Controllers
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
         }
+
+
+        [HttpPost]
+        [Route("Search")]
+        public async Task<List<Lesson>> Search([FromBody] LessonSearchInput input)
+        {
+            var data = await _repository.GetAllAsync();
+            var filteredData = data.Where(x => x.Name == input.Name || x.Code == input.Code || x.Akts == input.Akts);
+
+            return filteredData.ToList();
+
+        }
     }
 }
