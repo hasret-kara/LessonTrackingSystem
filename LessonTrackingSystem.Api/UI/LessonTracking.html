@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson & Student App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 1em;
+            display: flex;
+            gap: 1em;
+        }
+
+            nav a {
+                color: white;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        .container {
+            padding: 2em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        label {
+            display: block;
+            margin-top: 1em;
+        }
+
+        input, select {
+            width: 300px;
+            padding: 0.5em;
+        }
+
+        button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <nav>
+        <a onclick="showScreen('lesson')">Lesson</a>
+        <a onclick="showScreen('student')">Student</a>
+    </nav>
+
+    <div class="container">
+        <div id="lessonScreen">
+            <h2>Lesson</h2>
+            <form id="lessonForm">
+                <label>
+                    Name:
+                    <input type="text" id="lessonName" maxlength="50" required>
+                </label>
+                <label>
+                    Code:
+                    <input type="text" id="lessonCode" maxlength="50">
+                </label>
+                <label>
+                    AKTS:
+                    <input type="number" id="lessonAkts" required>
+                </label>
+                <button type="submit">Save Lesson</button>
+            </form>
+            <ul id="lessonList"></ul>
+        </div>
+
+        <div id="studentScreen" class="hidden">
+            <h2>Student</h2>
+            <form id="studentForm">
+                <label>
+                    Name:
+                    <input type="text" id="studentName" required>
+                </label>
+                <label>
+                    Surname:
+                    <input type="text" id="studentSurname" required>
+                </label>
+                <label>
+                    Birth Date:
+                    <input type="date" id="studentBirthDate" required>
+                </label>
+                <label>
+                    Number:
+                    <input type="number" id="studentNumber" required>
+                </label>
+                <label>
+                    Gender:
+                    <select id="studentGender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+                <button type="submit">Save Student</button>
+            </form>
+            <ul id="studentList"></ul>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            document.getElementById('lessonScreen').classList.add('hidden');
+            document.getElementById('studentScreen').classList.add('hidden');
+            document.getElementById(screenId + 'Screen').classList.remove('hidden');
+        }
+
+        $('#lessonForm').on('submit', function (e) {
+            e.preventDefault();
+            const lesson = {
+                name: $('#lessonName').val(),
+                code: $('#lessonCode').val(),
+                akts: parseInt($('#lessonAkts').val())
+            };
+
+            $.ajax({
+                url: 'https://localhost:7085/lesson',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(lesson),
+                success: function () {
+                    const li = document.createElement('li');
+                    li.textContent = `Lesson: ${lesson.name}, Code: ${lesson.code}, AKTS: ${lesson.akts}`;
+                    document.getElementById('lessonList').appendChild(li);
+                    $('#lessonForm')[0].reset();
+                },
+                error: function (xhr, status, error) {
+                    alert('Error saving lesson: ' + error);
+                }
+            });
+        });
+
+        $('#studentForm').on('submit', function (e) {
+            e.preventDefault();
+            const student = {
+                name: $('#studentName').val(),
+                surname: $('#studentSurname').val(),
+                birthDate: $('#studentBirthDate').val(),
+                number: parseInt($('#studentNumber').val()),
+                gender: $('#studentGender').val()
+            };
+
+            $.ajax({
+                url: 'https://localhost:7085/student',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(student),
+                success: function () {
+                    const li = document.createElement('li');
+                    li.textContent = `Student: ${student.name} ${student.surname}, Birth Date: ${student.birthDate}, Number: ${student.number}, Gender: ${student.gender}`;
+                    document.getElementById('studentList').appendChild(li);
+                    $('#studentForm')[0].reset();
+                },
+                error: function (xhr, status, error) {
+                    alert('Error saving student: ' + error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
