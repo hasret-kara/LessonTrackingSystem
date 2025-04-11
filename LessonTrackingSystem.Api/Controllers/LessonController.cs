@@ -33,7 +33,8 @@ namespace LessonTrackingSystem.Api.Controllers
             {
                 Name = input.Name,
                 Code = input.Code,
-                Akts = input.Akts
+                Akts = input.Akts,
+                IsDeleted = false
             };
             await _repository.AddAsync(entity);
             await _repository.SaveChangesAsync();
@@ -70,7 +71,7 @@ namespace LessonTrackingSystem.Api.Controllers
         public async Task<List<Lesson>> Search([FromBody] LessonSearchInput input)
         {
             var data = await _repository.GetAllAsync();
-            var filteredData = data.Where(x => x.Name == input.Name || x.Code == input.Code || x.Akts == input.Akts);
+            var filteredData = data.Where(x => x.IsDeleted == false);//.Where(x => x.Name == input.Name || x.Code == input.Code || x.Akts == input.Akts);
 
             return filteredData.ToList();
 

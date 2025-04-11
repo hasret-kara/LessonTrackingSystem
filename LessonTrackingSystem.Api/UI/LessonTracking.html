@@ -46,6 +46,22 @@
             margin-top: 1em;
             padding: 0.5em 1em;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.5em;
+            text-align: left;
+        }
+
+        .actions button {
+            margin-right: 5px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -59,6 +75,7 @@
         <div id="lessonScreen">
             <h2>Lesson</h2>
             <form id="lessonForm">
+                <input type="hidden" id="lessonId">
                 <label>
                     Name:
                     <input type="text" id="lessonName" maxlength="50" required>
@@ -73,12 +90,19 @@
                 </label>
                 <button type="submit">Save Lesson</button>
             </form>
-            <ul id="lessonList"></ul>
+
+            <table id="lessonTable">
+                <thead>
+                    <tr><th>Name</th><th>Code</th><th>AKTS</th><th>Actions</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
 
         <div id="studentScreen" class="hidden">
             <h2>Student</h2>
             <form id="studentForm">
+                <input type="hidden" id="studentId">
                 <label>
                     Name:
                     <input type="text" id="studentName" required>
@@ -105,17 +129,23 @@
                 </label>
                 <button type="submit">Save Student</button>
             </form>
-            <ul id="studentList"></ul>
+
+            <table id="studentTable">
+                <thead>
+                    <tr><th>Name</th><th>Surname</th><th>Birth Date</th><th>Number</th><th>Gender</th><th>Actions</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 
     <script>
         function showScreen(screenId) {
-            document.getElementById('lessonScreen').classList.add('hidden');
-            document.getElementById('studentScreen').classList.add('hidden');
-            document.getElementById(screenId + 'Screen').classList.remove('hidden');
+            $('#lessonScreen, #studentScreen').addClass('hidden');
+            $('#' + screenId + 'Screen').removeClass('hidden');
         }
 
+        // LESSON SECTION
         $('#lessonForm').on('submit', function (e) {
             e.preventDefault();
             const lesson = {
@@ -124,23 +154,69 @@
                 akts: parseInt($('#lessonAkts').val())
             };
 
+            const id = $('#lessonId').val();
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `https://localhost:7085/lesson/?id=${id}` : 'https://localhost:7085/lesson';
+
             $.ajax({
-                url: 'https://localhost:7085/lesson',
-                method: 'POST',
+                url,
+                method,
                 contentType: 'application/json',
                 data: JSON.stringify(lesson),
                 success: function () {
-                    const li = document.createElement('li');
-                    li.textContent = `Lesson: ${lesson.name}, Code: ${lesson.code}, AKTS: ${lesson.akts}`;
-                    document.getElementById('lessonList').appendChild(li);
                     $('#lessonForm')[0].reset();
-                },
-                error: function (xhr, status, error) {
-                    alert('Error saving lesson: ' + error);
+                    $('#lessonId').val('');
+                    loadLessons();
                 }
             });
         });
 
+        function loadLessons() {
+            $.ajax({
+                url: 'https://localhost:7085/lesson/search',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({}), // Arama kriteri boş, istersen buraya keyword eklenebilir
+                success: function (lessons) {
+                    const tbody = $('#lessonTable tbody').empty();
+                    lessons.forEach(lesson => {
+                        const row = `<tr>
+                        <td>${lesson.name}</td>
+                        <td>${lesson.code}</td>
+                        <td>${lesson.akts}</td>
+                        <td class="actions">
+                            <button onclick="editLesson('${lesson.id}', '${lesson.name}', '${lesson.code}', ${lesson.akts})">Edit</button>
+                            <button onclick="deleteLesson('${lesson.id}')">Delete</button>
+                        </td>
+                    </tr>`;
+                        tbody.append(row);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert("Lesson listesi alınamadı: " + error);
+                }
+            });
+        }
+
+
+        function editLesson(id, name, code, akts) {
+            $('#lessonId').val(id);
+            $('#lessonName').val(name);
+            $('#lessonCode').val(code);
+            $('#lessonAkts').val(akts);
+        }
+
+        function deleteLesson(id) {
+            $.ajax({
+                url: `https://localhost:7085/lesson/?id=${id}`,
+                method: 'DELETE',
+                success: function () {
+                    loadLessons();
+                }
+            });
+        }
+
+        // STUDENT SECTION
         $('#studentForm').on('submit', function (e) {
             e.preventDefault();
             const student = {
@@ -151,21 +227,76 @@
                 gender: $('#studentGender').val()
             };
 
+            const id = $('#studentId').val();
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `https://localhost:7085/student/?id=${id}` : 'https://localhost:7085/student';
+
             $.ajax({
-                url: 'https://localhost:7085/student',
-                method: 'POST',
+                url,
+                method,
                 contentType: 'application/json',
                 data: JSON.stringify(student),
                 success: function () {
-                    const li = document.createElement('li');
-                    li.textContent = `Student: ${student.name} ${student.surname}, Birth Date: ${student.birthDate}, Number: ${student.number}, Gender: ${student.gender}`;
-                    document.getElementById('studentList').appendChild(li);
                     $('#studentForm')[0].reset();
-                },
-                error: function (xhr, status, error) {
-                    alert('Error saving student: ' + error);
+                    $('#studentId').val('');
+                    loadStudents();
                 }
             });
+        });
+
+        function loadStudents() {
+            $.ajax({
+                url: 'https://localhost:7085/student/search',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({}), // Arama kriteri yok, boş gönderiyoruz
+                success: function (students) {
+                    const tbody = $('#studentTable tbody').empty();
+                    students.forEach(student => {
+                        const row = `<tr>
+                        <td>${student.name}</td>
+                        <td>${student.surname}</td>
+                        <td>${student.birthDate}</td>
+                        <td>${student.number}</td>
+                        <td>${student.gender}</td>
+                        <td class="actions">
+                            <button onclick="editStudent('${student.id}', '${student.name}', '${student.surname}', '${student.birthDate}', ${student.number}, '${student.gender}')">Edit</button>
+                            <button onclick="deleteStudent('${student.id}')">Delete</button>
+                        </td>
+                    </tr>`;
+                        tbody.append(row);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert("Student listesi alınamadı: " + error);
+                }
+            });
+        }
+
+
+        function editStudent(id, name, surname, birthDate, number, gender) {
+            $('#studentId').val(id);
+            $('#studentName').val(name);
+            $('#studentSurname').val(surname);
+            $('#studentBirthDate').val(birthDate);
+            $('#studentNumber').val(number);
+            $('#studentGender').val(gender);
+        }
+
+        function deleteStudent(id) {
+            $.ajax({
+                url: `https://localhost:7085/student/?id=${id}`,
+                method: 'DELETE',
+                success: function () {
+                    loadStudents();
+                }
+            });
+        }
+
+        // İlk yüklemede listele
+        $(document).ready(() => {
+            loadLessons();
+            loadStudents();
         });
     </script>
 </body>

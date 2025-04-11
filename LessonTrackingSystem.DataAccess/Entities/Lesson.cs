@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LessonTrackingSystem.DataAccess.Entities
 {
     [Table("Lessons")]
-    public class Lesson
+    public class Lesson : ISoftDelete
     {
         [Key]
         public Guid Id { get; set; }
@@ -18,5 +18,6 @@ namespace LessonTrackingSystem.DataAccess.Entities
 
         [Required]
         public int Akts { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

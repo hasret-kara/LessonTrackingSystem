@@ -35,7 +35,8 @@ namespace StudentTrackingSystem.Api.Controllers
                 Surname = input.Surname,
                 BirthDate = input.BirthDate,
                 Number = input.Number,
-                Gender = input.Gender
+                Gender = input.Gender,
+                IsDeleted = false
             };
             await _repository.AddAsync(entity);
             await _repository.SaveChangesAsync();
@@ -73,7 +74,7 @@ namespace StudentTrackingSystem.Api.Controllers
         public async Task<List<Student>> Search([FromBody] StudentSearchInput input)
         {
             var data = await _repository.GetAllAsync();
-            var filteredData = data.Where(x => x.Name == input.Name || x.Surname == input.Surname || x.BirthDate >= input.BirthDate);
+            var filteredData = data.Where(x => x.IsDeleted == false);//.Where(x => x.Name == input.Name || x.Surname == input.Surname || x.BirthDate >= input.BirthDate);
 
             return filteredData.ToList();
         }
