@@ -78,15 +78,15 @@
                 <input type="hidden" id="lessonId">
                 <label>
                     Name:
-                    <input type="text" id="lessonName" maxlength="50" required>
+                    <input type="text" id="lessonName"  maxlength="20" required>
                 </label>
                 <label>
                     Code:
-                    <input type="text" id="lessonCode" maxlength="50">
+                    <input type="text" id="lessonCode" >
                 </label>
                 <label>
                     AKTS:
-                    <input type="number" id="lessonAkts" required>
+                    <input type="number" id="lessonAkts" max="10" min="1" required>
                 </label>
                 <button type="submit">Save Lesson</button>
             </form>
@@ -104,20 +104,20 @@
             <form id="studentForm">
                 <input type="hidden" id="studentId">
                 <label>
-                    Name:
-                    <input type="text" id="studentName" required>
+                    Adı *:
+                    <input type="text" id="studentName" maxlength="100" required>
                 </label>
                 <label>
-                    Surname:
-                    <input type="text" id="studentSurname" required>
+                    Surname *:
+                    <input type="text" id="studentSurname" maxlength="100" required>
                 </label>
                 <label>
                     Birth Date:
-                    <input type="date" id="studentBirthDate" required>
+                    <input type="date" id="studentBirthDate" min="1990-01-01"  max="2025-04-15" required>
                 </label>
                 <label>
                     Number:
-                    <input type="number" id="studentNumber" required>
+                    <input type="number" id="studentNumber" min= "1"  max= "5"required>
                 </label>
                 <label>
                     Gender:
@@ -181,14 +181,14 @@
                     const tbody = $('#lessonTable tbody').empty();
                     lessons.forEach(lesson => {
                         const row = `<tr>
-                        <td>${lesson.name}</td>
-                        <td>${lesson.code}</td>
-                        <td>${lesson.akts}</td>
-                        <td class="actions">
-                            <button onclick="editLesson('${lesson.id}', '${lesson.name}', '${lesson.code}', ${lesson.akts})">Edit</button>
-                            <button onclick="deleteLesson('${lesson.id}')">Delete</button>
-                        </td>
-                    </tr>`;
+                            <td>${lesson.name}</td>
+                            <td>${lesson.code}</td>
+                            <td>${lesson.akts}</td>
+                            <td class="actions">
+                                <button onclick="editLesson('${lesson.id}', '${lesson.name}', '${lesson.code}', ${lesson.akts})">Edit</button>
+                                <button onclick="deleteLesson('${lesson.id}')">Delete</button>
+                            </td>
+                        </tr>`;
                         tbody.append(row);
                     });
                 },
@@ -254,16 +254,16 @@
                     const tbody = $('#studentTable tbody').empty();
                     students.forEach(student => {
                         const row = `<tr>
-                        <td>${student.name}</td>
-                        <td>${student.surname}</td>
-                        <td>${student.birthDate}</td>
-                        <td>${student.number}</td>
-                        <td>${student.gender}</td>
-                        <td class="actions">
-                            <button onclick="editStudent('${student.id}', '${student.name}', '${student.surname}', '${student.birthDate}', ${student.number}, '${student.gender}')">Edit</button>
-                            <button onclick="deleteStudent('${student.id}')">Delete</button>
-                        </td>
-                    </tr>`;
+                            <td>${student.name}</td>
+                            <td>${student.surname}</td>
+                            <td>${student.birthDate}</td>
+                            <td>${student.number}</td>
+                            <td>${student.gender}</td>
+                            <td class="actions">
+                                <button onclick="editStudent('${student.id}', '${student.name}', '${student.surname}', '${student.birthDate}', ${student.number}, '${student.gender}')">Edit</button>
+                                <button onclick="deleteStudent('${student.id}')">Delete</button>
+                            </td>
+                        </tr>`;
                         tbody.append(row);
                     });
                 },
