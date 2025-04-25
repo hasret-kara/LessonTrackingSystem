@@ -13,22 +13,25 @@ namespace StudentTrackingSystem.Api.Controllers
 
         public StudentController(IRepository<Student> repository)
         {
-
             _repository = repository;
         }
 
-
-        [HttpGet]
-        public async Task<Student> Get(Guid id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
         {
             var entity = await _repository.GetByIdAsync(id);
-            return entity;
+            if (entity == null)
+                return NotFound();
+
+            return Ok(entity);
         }
 
-
         [HttpPost]
-        public async Task Create([FromBody] StudentCreateUpdateInputModel input)
+        public async Task<IActionResult> Create([FromBody] StudentCreateUpdateInputModel input)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var entity = new Student
             {
                 Name = input.Name,
@@ -38,89 +41,61 @@ namespace StudentTrackingSystem.Api.Controllers
                 Gender = input.Gender,
                 IsDeleted = false
             };
+
             await _repository.AddAsync(entity);
             await _repository.SaveChangesAsync();
+
+            return Ok();
         }
 
-
-        [HttpPut]
-        public async Task Update([FromBody] StudentCreateUpdateInputModel input, Guid id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromBody] StudentCreateUpdateInputModel input, Guid id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var entity = await _repository.GetByIdAsync(id);
-            if (entity != null)
-            {
-                entity.Name = input.Name;
-                entity.Surname = input.Surname;
-                entity.BirthDate = input.BirthDate;
-                entity.Number = input.Number;
-                entity.Gender = input.Gender;
+            if (entity == null)
+                return NotFound();
 
-                _repository.Update(entity);
-                await _repository.SaveChangesAsync();
-            }
+            entity.Name = input.Name;
+            entity.Surname = input.Surname;
+            entity.BirthDate = input.BirthDate;
+            entity.Number = input.Number;
+            entity.Gender = input.Gender;
 
+            _repository.Update(entity);
+            await _repository.SaveChangesAsync();
+
+            return Ok();
         }
 
-        [HttpDelete]
-        public async Task Delete(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                return NotFound();
+
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        [HttpPost]
-        [Route("Search")]
-        public async Task<List<Student>> Search([FromBody] StudentSearchInput input)
+        [HttpPost("Search")]
+        public async Task<IActionResult> Search([FromBody] StudentSearchInput input)
         {
             var data = await _repository.GetAllAsync();
-            var filteredData = data.Where(x => x.IsDeleted == false);//.Where(x => x.Name == input.Name || x.Surname == input.Surname || x.BirthDate >= input.BirthDate);
+            var filteredData = data
+                .Where(x => x.IsDeleted == false)
+                .Where(x =>
+                    (string.IsNullOrEmpty(input.Name) || x.Name.Contains(input.Name)) &&
+                    (string.IsNullOrEmpty(input.Surname) || x.Surname.Contains(input.Surname)) &&
+                    (!input.BirthDate.HasValue || x.BirthDate >= input.BirthDate.Value))
+                .ToList();
 
-            return filteredData.ToList();
+            return Ok(filteredData);
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

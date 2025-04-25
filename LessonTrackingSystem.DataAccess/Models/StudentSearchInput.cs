@@ -1,4 +1,6 @@
 ﻿
+using LessonTrackingSystem.DataAccess.Models;
+
 namespace LessonTrackingSystem.DataAccess.Models
 {
     public class StudentSearchInput
@@ -8,3 +10,4 @@ namespace LessonTrackingSystem.DataAccess.Models
         public DateTime? BirthDate { get; set; }
     }
 }
+
