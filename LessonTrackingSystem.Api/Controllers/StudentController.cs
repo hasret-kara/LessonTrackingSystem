@@ -29,46 +29,72 @@ namespace StudentTrackingSystem.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] StudentCreateUpdateInputModel input)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var entity = new Student
+            try
             {
-                Name = input.Name,
-                Surname = input.Surname,
-                BirthDate = input.BirthDate,
-                Number = input.Number,
-                Gender = input.Gender,
-                IsDeleted = false
-            };
 
-            await _repository.AddAsync(entity);
-            await _repository.SaveChangesAsync();
+                int a = 0; int b = 1;
+                int c = a / b;
 
-            return Ok();
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var entity = new Student
+                {
+                    Name = input.Name,
+                    Surname = input.Surname,
+                    BirthDate = input.BirthDate,
+                    Number = input.Number,
+                    Gender = input.Gender,
+                    IsDeleted = false
+                };
+
+                await _repository.AddAsync(entity);
+                await _repository.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+
+                throw ex;
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromBody] StudentCreateUpdateInputModel input, Guid id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            try
+            {
 
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                return NotFound();
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            entity.Name = input.Name;
-            entity.Surname = input.Surname;
-            entity.BirthDate = input.BirthDate;
-            entity.Number = input.Number;
-            entity.Gender = input.Gender;
+                var entity = await _repository.GetByIdAsync(id);
+                if (entity == null)
+                    return NotFound();
 
-            _repository.Update(entity);
-            await _repository.SaveChangesAsync();
+                entity.Name = input.Name;
+                entity.Surname = input.Surname;
+                entity.BirthDate = input.BirthDate;
+                entity.Number = input.Number;
+                entity.Gender = input.Gender;
 
-            return Ok();
+                _repository.Update(entity);
+                await _repository.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+                throw ex;
+            }
         }
+
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
@@ -93,9 +119,10 @@ namespace StudentTrackingSystem.Api.Controllers
                     (string.IsNullOrEmpty(input.Name) || x.Name.Contains(input.Name)) &&
                     (string.IsNullOrEmpty(input.Surname) || x.Surname.Contains(input.Surname)) &&
                     (!input.BirthDate.HasValue || x.BirthDate >= input.BirthDate.Value))
-                .ToList();
+                   .ToList();
 
             return Ok(filteredData);
+
         }
     }
 }

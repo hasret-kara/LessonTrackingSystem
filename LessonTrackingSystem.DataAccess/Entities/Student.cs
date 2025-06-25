@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LessonTrackingSystem.DataAccess.Entities
 {
-    public class Student : ISoftDelete
+    public class Student : BaseEntity
     {
         public Guid Id { get; set; }
 
@@ -25,7 +25,5 @@ namespace LessonTrackingSystem.DataAccess.Entities
 
         [Required(ErrorMessage = "Gender must be selected.")]
         public string Gender { get; set; }
-
-        public bool? IsDeleted { get; set; }
     }
 }
